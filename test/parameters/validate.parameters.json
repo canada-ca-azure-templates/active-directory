@@ -1,0 +1,79 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultResourceGroupName": {
+            "value": "PwS2-validate-active-directory-RG"
+        },
+        "keyVaultName": {
+            "value": "PwS2-validate-[unique]"
+        },
+        "DomainName": {
+            "value": "pspc.gc.ca.local"
+        },
+        "createChildDomain": {
+            "value": false
+        },
+        "ChildDomainName": {
+            "value": "mgmt"
+        },
+        "VMSize": {
+            "value": "Standard_B2ms"
+        },
+        "vnetRG": {
+            "value": "PwS2-validate-active-directory-RG"
+        },
+        "vnetName": {
+            "value": "PwS2-validate-active-directory-VNET"
+        },
+        "vnetAddressRange": {
+            "value": "10.250.0.0/20"
+        },
+        "adSubnetName": {
+            "value": "APP"
+        },
+        "adSubnet": {
+            "value": "10.250.1.0/24"
+        },
+        "RootDC1Name": {
+            "value": "AzPwS-RootDC01"
+        },
+        "RootDC1IPAddress": {
+            "value": "10.250.1.8"
+        },
+        "RootDC2Name": {
+            "value": "AzPwS-RootDC01"
+        },
+        "RootDC2IPAddress": {
+            "value": "10.250.1.9"
+        },
+        "ChildDC3Name": {
+            "value": "AzPwS-MgmtDC01"
+        },
+        "ChildDC3IPAddress": {
+            "value": "10.250.1.10"
+        },
+        "ChildDC4Name": {
+            "value": "AzPwS-MgmtDC02"
+        },
+        "ChildDC4IPAddress": {
+            "value": "10.250.1.11"
+        },
+        "tagValues": {
+            "value": {
+                "Owner": "build.pipeline@tpsgc-pwgsc.gc.ca",
+                "CostCenter": "PSPC-EA",
+                "Enviroment": "Validate",
+                "Classification": "Unclassified",
+                "Organizations": "PSPC-CCC-E&O",
+                "DeploymentVersion": "2018-12-12-01"
+            }
+        },
+        "ReverseZoneObject": {
+            "value": [
+                "2.250.10",
+                "1.250.10"
+            ]
+        }
+    }
+}
