@@ -2,7 +2,8 @@ Param(
     [Parameter(Mandatory = $false)][string]$templateLibraryName = (Split-Path (Resolve-Path "$PSScriptRoot\..") -Leaf),
     [string]$Location = "canadacentral",
     [string]$subscription = "",
-    [switch]$devopsCICD = $false
+    [switch]$devopsCICD = $false,
+    [switch]$doNotCleanup = $false
 )
 
 #******************************************************************************
@@ -47,7 +48,7 @@ if (-not $devopsCICD) {
 
     # Make sure we update code to git
     # git branch dev ; git checkout dev ; git pull origin dev
-    git add . ; git commit -m "Update validation" ; git push origin $currentBranch
+    git add ..\. ; git commit -m "Update validation" ; git push origin $currentBranch
 }
 
 if ($subscription -ne "") {
@@ -55,9 +56,11 @@ if ($subscription -ne "") {
 }
 
 # Cleanup validation resource content in case it did not properly completed and left over components are still lingeringcd
-Write-Host "Cleanup old $templateLibraryName validation resources if needed...";
+if (-not $doNotCleanup) {
+    Write-Host "Cleanup old $templateLibraryName validation resources if needed...";
 
-New-AzureRmResourceGroupDeployment -ResourceGroupName PwS2-validate-$templateLibraryName-RG -Mode Complete -TemplateFile (Resolve-Path "$PSScriptRoot\parameters\cleanup.json") -Force -Verbose
+    New-AzureRmResourceGroupDeployment -ResourceGroupName PwS2-validate-$templateLibraryName-RG -Mode Complete -TemplateFile (Resolve-Path "$PSScriptRoot\parameters\cleanup.json") -Force -Verbose
+}
 
 # Start the deployment
 Write-Host "Starting $templateLibraryName dependancies deployment...";
@@ -83,5 +86,8 @@ if ($provisionningState -eq "Failed") {
 }
 
 # Cleanup validation resource content
-Write-Host "Cleanup $templateLibraryName validation resources...";
-New-AzureRmResourceGroupDeployment -ResourceGroupName PwS2-validate-$templateLibraryName-RG -Mode Complete -TemplateFile (Resolve-Path "$PSScriptRoot\parameters\cleanup.json") -Force -Verbose
+if (-not $doNotCleanup) {
+    Write-Host "Cleanup old $templateLibraryName validation resources...";
+
+    New-AzureRmResourceGroupDeployment -ResourceGroupName PwS2-validate-$templateLibraryName-RG -Mode Complete -TemplateFile (Resolve-Path "$PSScriptRoot\parameters\cleanup.json") -Force -Verbose
+}
