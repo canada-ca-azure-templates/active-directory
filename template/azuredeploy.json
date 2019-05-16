@@ -160,7 +160,7 @@
          }
     },
     "variables": {
-        "baseUrl": "[concat(uri(deployment().properties.templateLink.uri, 'domain-controllers.json'), parameters('containerSasToken'))]",
+        "baseUrl": "[concat(uri(deployment().properties.templateLink.uri, 'active-directory.json'), parameters('containerSasToken'))]",
         "keyVaultId": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', parameters('keyVaultResourceGroupName'), '/providers/Microsoft.KeyVault/vaults/', pspc.getValidKeyvaultName(pspc.getUniqueKeyvaultName(parameters('keyVaultName'), pspc.getResourceGroupID(parameters('keyVaultResourceGroupName')))))]"
     },
     "functions": [

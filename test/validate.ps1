@@ -47,7 +47,7 @@ if (-not $devopsCICD) {
 
     # Make sure we update code to git
     # git branch dev ; git checkout dev ; git pull origin dev
-    git add . ; git commit -m "Update validation" ; git push origin $currentBranch
+    git add ..\. ; git commit -m "Update validation" ; git push origin $currentBranch
 }
 
 if ($subscription -ne "") {

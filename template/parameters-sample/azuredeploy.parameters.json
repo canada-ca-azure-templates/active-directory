@@ -68,10 +68,10 @@
           "environment": "Sandbox",
           "classification": "Unclassified",
           "version": "0.4"
-      },
-      "ReverseZoneObject": {
-        "value":["2.250.10", "1.250.10"]
       }
+    },
+    "ReverseZoneObject": {
+      "value":["2.250.10", "1.250.10"]
     }
   }
 }
