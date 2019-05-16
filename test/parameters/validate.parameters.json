@@ -36,28 +36,16 @@
             "value": "10.250.1.0/24"
         },
         "RootDC1Name": {
-            "value": "AzPwS-RootDC01"
+            "value": "PwS2-RootDC01"
         },
         "RootDC1IPAddress": {
             "value": "10.250.1.8"
         },
         "RootDC2Name": {
-            "value": "AzPwS-RootDC01"
+            "value": "PwS2-RootDC02"
         },
         "RootDC2IPAddress": {
             "value": "10.250.1.9"
-        },
-        "ChildDC3Name": {
-            "value": "AzPwS-MgmtDC01"
-        },
-        "ChildDC3IPAddress": {
-            "value": "10.250.1.10"
-        },
-        "ChildDC4Name": {
-            "value": "AzPwS-MgmtDC02"
-        },
-        "ChildDC4IPAddress": {
-            "value": "10.250.1.11"
         },
         "tagValues": {
             "value": {
