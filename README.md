@@ -83,7 +83,7 @@ The following items are assumed to exist already in the deployment:
       "value": "10.10.1.8"
     },
     "RootDC2Name": {
-      "value": "demo-RootDC01"
+      "value": "demo-RootDC02"
     },
     "RootDC2IPAddress": {
       "value": "10.10.1.9"
@@ -159,64 +159,6 @@ The following items are assumed to exist already in the deployment:
 This project was initially copied from the
 [active-directory-new-domain-ha-2-dc](https://github.com/Azure/azure-quickstart-templates/tree/master/active-directory-new-domain-ha-2-dc)
 project by Simon Davies, part of the the Azure Quickstart templates.
-
-### Additional Information
-
-The following are additional notes from the original creator.
-
-#### DNS
-
-The hard part about creating forests, domains and Domain Controllers in Azure is the managing of DNS Domains and zones, and DNS references. AD strongly depends on its own DNS domains, and during domain creation the relevant zones must be created. On the other hand, Azure VMs _must_ have internet connectivity for their internal Azure Agent to work.
-
-To meet this requirement, the DNS reference in the IP Settings of each VM must be changed a couple of times during deployment. The design choice I made was to appoint the first VM as master DNS server. It will resolve externally, and this is why the configuration asks you to supply an external forwarder. In the end situation, the VNET has two DNS servers pointing to the forest root domain, so any new VM you add to the VNET will have a working DNS allowing it to find the AD zones and the internet domains.
-
-I also had to look carefully at the order in which the VMs are provisioned.
-Initially I created the root domain on DC1. Then, I promoted DC2 (root)
-and DC3 (child) at the same time. After much testing I discovered that this
-would _sometimes_ go wrong because DC3 would take DC2 as a DNS source
-when it was not ready. So I reordered the dependencies to first promote
- DC1 (root), then DC3 (child), and only then add secondary DCs to both domains.
-
-#### Desired State Configuration (DSC)
-
-The main requirement when I started this project was that I wanted a one-shot template deployment of a working forest without additional post-configuration. Clearly, to create an AD forest you must do stuff inside all VMs, and different stuff depending on the domain role. I saw two ways to accomplish this: script extensions and DSC.
-
-After some consideration I decided to use DSC to re-use whatever existing IP is out there, and to avoid having to develop everything myself. Less did I realize that this also means that I have accept the limitations that go along with it: if the DSC module does not support it, you can't have it. One such example is creation of a tree domain in the same forest, such as a root of _contoso.com_ and another tree of 
-_fabrikam.com_. The DSC for Active Directory does not currently (feb 2017)
-allow this.
-
-In this project I have only used widely accepted DSC modules to avoid developing or maintaining my own:
-
-* xActivedirectory
-* xNetworking
-* xStorage
-* cDisk
-
-If you look into the DSC Configurations that I use you will see that I had to add Script resource to set the DNS forwarder. This is unfortunate (a hack) but the xDNSServer DSC module did not work for me. Apparently the DNS service is not stable enough directly after installation to support this module. I added a wait loop to solve this issue. 
-
-Finally, I had to use an external script resource to enable the Powershell execution policy specifically for Windows Server 2012 (non-R2). By default, DSC does not work here. I injected a small powershell script to set the execution policy to unrestricted.
-
-For similar reasons, this template does not support Windows Server 2008 R2. While the standard Azure image VM image for 2008 R2 supports DSC now, it is still highly limited in which modules work or not. This is almost undocumented, but the short version is that almost nothing worked for 2008 R2 so I had to give it up.
-
-### Update October 2017
-
-New features:
-
-* Converted VMs to use managed disks.
-* Removed the storage account.
-* Made the child domain optional.
-* Greatly simplified the optional parts of the template using the new "condition" keyword.
-
-### Update September 2018
-
-New Features:
-
-* Added B-series (burstable) VM, very suitable to run DCs cheaply. 
-* Added Standard SSD disks (now default), and made the choice for disk type explicit. This type is well suited for typical DC performance. 
-* Added the possibility to deploy to a location different to that of the Resource Group.
-* general cleanup: updated all APIs to the most recent ones, updated DSC modules to the latest.
-
-Willem Kasdorp, 9-30-2018.
 
 ## History
 
